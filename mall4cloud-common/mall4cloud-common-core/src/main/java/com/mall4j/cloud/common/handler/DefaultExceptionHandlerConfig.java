@@ -1,6 +1,8 @@
 package com.mall4j.cloud.common.handler;
 
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
+import com.alibaba.fastjson.JSONObject;
 import com.mall4j.cloud.common.exception.Mall4cloudException;
 import com.mall4j.cloud.common.response.ResponseEnum;
 import com.mall4j.cloud.common.response.ServerResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -33,6 +36,13 @@ import java.util.List;
 public class DefaultExceptionHandlerConfig {
 
 	private static final Logger logger = LoggerFactory.getLogger(DefaultExceptionHandlerConfig.class);
+
+    @ResponseBody
+    @ExceptionHandler(value = BlockException.class) // 因为这里是示例，所以暂时使用 JSONObject，实际项目最终定义一个 CommonResult。
+    public JSONObject blockExceptionHandler(BlockException blockException) {
+        return new JSONObject().fluentPut("code", 1024)
+                .fluentPut("msg", "请求被拦截，拦截类型为 " + blockException.getClass().getSimpleName());
+    }
 
 	@ExceptionHandler({ MethodArgumentNotValidException.class, BindException.class })
 	public ResponseEntity<ServerResponseEntity<List<String>>> methodArgumentNotValidExceptionHandler(Exception e) {
