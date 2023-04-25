@@ -1,6 +1,7 @@
 package com.mall4j.cloud.common.rocketmq.config;
 
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
+import org.apache.rocketmq.client.producer.TransactionMQProducer;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.apache.rocketmq.spring.support.RocketMQMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ public class RocketMqAdapter {
     public RocketMQTemplate getTemplateByTopicName(String topic){
         RocketMQTemplate mqTemplate = new RocketMQTemplate();
         DefaultMQProducer producer = new DefaultMQProducer(topic);
+        // TransactionMQProducer p = new TransactionMQProducer();
         producer.setNamesrvAddr(nameServer);
         producer.setRetryTimesWhenSendFailed(2);
         producer.setSendMsgTimeout((int) RocketMqConstant.TIMEOUT);

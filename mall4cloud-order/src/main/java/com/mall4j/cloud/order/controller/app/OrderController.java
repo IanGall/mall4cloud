@@ -23,6 +23,7 @@ import com.mall4j.cloud.order.vo.SubmitOrderPayInfoVO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +40,7 @@ import java.util.*;
 @RestController("appOrderController")
 @RequestMapping("/a/order")
 @Tag(name = "app-订单信息")
+@Slf4j
 public class OrderController {
 
     @Autowired
@@ -97,6 +99,7 @@ public class OrderController {
     @Operation(summary = "提交订单，返回支付流水号" , description = "根据传入的参数判断是否为购物车提交订单，同时对购物车进行删除，用户开始进行支付")
     public ServerResponseEntity<List<Long>> submitOrders() {
         Long userId = AuthUserContext.get().getUserId();
+        // log.debug("线程id:{},用户id：{}",Thread.currentThread().getName(), userId);
         ShopCartOrderMergerVO mergerOrder = cacheManagerUtil.getCache(OrderCacheNames.ORDER_CONFIRM_KEY, String.valueOf(userId));
         // 看看订单有没有过期
         if (mergerOrder == null) {
