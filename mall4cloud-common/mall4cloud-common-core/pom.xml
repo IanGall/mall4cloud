@@ -84,9 +84,13 @@
             <systemPath>${pom.basedir}/lib/canal-glue-core.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>io.seata</groupId>
-            <artifactId>seata-spring-boot-starter</artifactId>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
         </dependency>
+        <!--<dependency>-->
+        <!--    <groupId>io.seata</groupId>-->
+        <!--    <artifactId>seata-spring-boot-starter</artifactId>-->
+        <!--</dependency>-->
     </dependencies>
 
 </project>

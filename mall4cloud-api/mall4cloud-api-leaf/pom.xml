@@ -18,9 +18,13 @@
             <artifactId>mall4cloud-common-core</artifactId>
             <version>${project.version}</version>
             <exclusions>
+                <!--<exclusion>-->
+                <!--    <groupId>io.seata</groupId>-->
+                <!--    <artifactId>seata-spring-boot-starter</artifactId>-->
+                <!--</exclusion>-->
                 <exclusion>
-                    <groupId>io.seata</groupId>
-                    <artifactId>seata-spring-boot-starter</artifactId>
+                    <groupId>com.alibaba.cloud</groupId>
+                    <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

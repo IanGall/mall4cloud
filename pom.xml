@@ -39,6 +39,7 @@
 
         <!--分离出这两个东西，是为了能够在 spring cloud alibaba不更新的时候，及时更新-->
         <seata.version>1.6.1</seata.version>
+        <!--<alibaba.seata.version>2021.1</alibaba.seata.version>-->
         <nacos.version>2.2.0</nacos.version>
 
         <!-- 次要依赖 -->
@@ -103,10 +104,25 @@
                 <!--    </exclusion>-->
                 <!--</exclusions>-->
             </dependency>
+            <!--<dependency>-->
+            <!--    <groupId>io.seata</groupId>-->
+            <!--    <artifactId>seata-spring-boot-starter</artifactId>-->
+            <!--    <version>${seata.version}</version>-->
+            <!--    <exclusions>-->
+            <!--        &lt;!&ndash;<exclusion>&ndash;&gt;-->
+            <!--        &lt;!&ndash;    <groupId>com.google.guava</groupId>&ndash;&gt;-->
+            <!--        &lt;!&ndash;    <artifactId>guava</artifactId>&ndash;&gt;-->
+            <!--        &lt;!&ndash;</exclusion>&ndash;&gt;-->
+            <!--        <exclusion>-->
+            <!--            <groupId>com.alibaba</groupId>-->
+            <!--            <artifactId>druid</artifactId>-->
+            <!--        </exclusion>-->
+            <!--    </exclusions>-->
+            <!--</dependency>-->
             <dependency>
-                <groupId>io.seata</groupId>
-                <artifactId>seata-spring-boot-starter</artifactId>
-                <version>${seata.version}</version>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
                 <exclusions>
                     <!--<exclusion>-->
                     <!--    <groupId>com.google.guava</groupId>-->
