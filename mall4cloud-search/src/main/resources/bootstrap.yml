@@ -1,5 +1,5 @@
 server:
-  port: 9108
+  port: 19900
 spring:
   application:
     name: @artifactId@
