@@ -36,6 +36,7 @@
         <spring-boot.version>2.3.12.RELEASE</spring-boot.version>
         <spring-cloud.version>Hoxton.SR12</spring-cloud.version>
         <spring-cloud-alibaba.version>2.2.9.RELEASE</spring-cloud-alibaba.version>
+        <spring-boot-redission.version>3.14.1</spring-boot-redission.version>
 
         <!--分离出这两个东西，是为了能够在 spring cloud alibaba不更新的时候，及时更新-->
         <seata.version>1.6.1</seata.version>
@@ -69,6 +70,23 @@
                 <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter-data-redis</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <!-- 实现对 Redisson 的自动化配置 -->
+            <!--<dependency>-->
+            <!--    <groupId>org.redisson</groupId>-->
+            <!--    <artifactId>redisson</artifactId>-->
+            <!--    <version>${spring-boot-redission.version}</version>-->
+            <!--</dependency>-->
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-spring-boot-starter</artifactId>
+                <version>${spring-boot-redission.version}</version>
             </dependency>
             <!--spring cloud-->
             <dependency>
@@ -135,6 +153,12 @@
                 </exclusions>
             </dependency>
             <!-- 次要依赖 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring-boot.version}</version>
+                <!--<scope>test</scope>-->
+            </dependency>
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-core</artifactId>
