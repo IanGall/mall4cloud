@@ -3,6 +3,7 @@ package com.mall4j.cloud.common.rocketmq.config;
 /**
  * nameserver用;分割
  * 同步消息，如果两次
+ *
  * @author FrozenWatermelon
  * @date 2021/3/25
  */
@@ -46,5 +47,15 @@ public class RocketMqConstant {
     public static final String CANAL_TOPIC = "canal-topic";
 
 
+    /**
+     * MQTemplateName
+     */
+    public static class MQTemplateName {
+        public static final String STOCK_MQ_TEMPLATE = "stockMqTemplate";
+        public static final String ORDER_CANCEL_TEMPLATE = "orderCancelTemplate";
+        public static final String ORDER_NOTIFY_STOCK_TEMPLATE = "orderNotifyStockTemplate";
+        public static final String ORDER_NOTIFY_TEMPLATE = "orderNotifyTemplate";
+
+    }
 
 }

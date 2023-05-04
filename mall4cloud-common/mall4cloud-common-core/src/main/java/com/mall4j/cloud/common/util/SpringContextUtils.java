@@ -14,6 +14,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class SpringContextUtils implements ApplicationContextAware {
 
+	public static ApplicationContext getApplicationContext() {
+		return applicationContext;
+	}
+
 	public static ApplicationContext applicationContext;
 
 	@SuppressWarnings("NullableProblems")

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall4j.cloud.common.rocketmq.mapper.MsgInfoMapper">
+  <resultMap id="BaseResultMap" type="com.mall4j.cloud.common.rocketmq.model.MsgInfo">
+    <!--@mbg.generated-->
+    <!--@Table msg_info-->
+    <id column="msg_id" jdbcType="BIGINT" property="msgId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="template_name" jdbcType="VARCHAR" property="templateName" />
+    <result column="message_topic" jdbcType="VARCHAR" property="messageTopic" />
+    <result column="message_body" jdbcType="VARCHAR" property="messageBody" />
+    <result column="timeout" jdbcType="INTEGER" property="timeout" />
+    <result column="delay_level" jdbcType="TINYINT" property="delayLevel" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="error_msg" jdbcType="VARCHAR" property="errorMsg" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    msg_id, create_time, update_time, template_name, message_topic, message_body, timeout,
+    delay_level, `status`, error_msg
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select
+    <include refid="Base_Column_List" />
+    from msg_info
+    where msg_id = #{msgId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--@mbg.generated-->
+    delete from msg_info
+    where msg_id = #{msgId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="msg_id" keyProperty="msgId" parameterType="com.mall4j.cloud.common.rocketmq.model.MsgInfo" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into msg_info (create_time, update_time, template_name,
+      message_topic, message_body, timeout,
+      delay_level, `status`, error_msg
+      )
+    values (#{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{templateName,jdbcType=VARCHAR},
+      #{messageTopic,jdbcType=VARCHAR}, #{messageBody,jdbcType=VARCHAR}, #{timeout,jdbcType=INTEGER},
+      #{delayLevel,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{errorMsg,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="msg_id" keyProperty="msgId" parameterType="com.mall4j.cloud.common.rocketmq.model.MsgInfo" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into msg_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="templateName != null">
+        template_name,
+      </if>
+      <if test="messageTopic != null">
+        message_topic,
+      </if>
+      <if test="messageBody != null">
+        message_body,
+      </if>
+      <if test="timeout != null">
+        timeout,
+      </if>
+      <if test="delayLevel != null">
+        delay_level,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="errorMsg != null">
+        error_msg,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="templateName != null">
+        #{templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="messageTopic != null">
+        #{messageTopic,jdbcType=VARCHAR},
+      </if>
+      <if test="messageBody != null">
+        #{messageBody,jdbcType=VARCHAR},
+      </if>
+      <if test="timeout != null">
+        #{timeout,jdbcType=INTEGER},
+      </if>
+      <if test="delayLevel != null">
+        #{delayLevel,jdbcType=TINYINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="errorMsg != null">
+        #{errorMsg,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mall4j.cloud.common.rocketmq.model.MsgInfo">
+    <!--@mbg.generated-->
+    update msg_info
+    <set>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="templateName != null">
+        template_name = #{templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="messageTopic != null">
+        message_topic = #{messageTopic,jdbcType=VARCHAR},
+      </if>
+      <if test="messageBody != null">
+        message_body = #{messageBody,jdbcType=VARCHAR},
+      </if>
+      <if test="timeout != null">
+        timeout = #{timeout,jdbcType=INTEGER},
+      </if>
+      <if test="delayLevel != null">
+        delay_level = #{delayLevel,jdbcType=TINYINT},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="errorMsg != null">
+        error_msg = #{errorMsg,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where msg_id = #{msgId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mall4j.cloud.common.rocketmq.model.MsgInfo">
+    <!--@mbg.generated-->
+    update msg_info
+    set create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      template_name = #{templateName,jdbcType=VARCHAR},
+      message_topic = #{messageTopic,jdbcType=VARCHAR},
+      message_body = #{messageBody,jdbcType=VARCHAR},
+      timeout = #{timeout,jdbcType=INTEGER},
+      delay_level = #{delayLevel,jdbcType=TINYINT},
+      `status` = #{status,jdbcType=TINYINT},
+      error_msg = #{errorMsg,jdbcType=VARCHAR}
+    where msg_id = #{msgId,jdbcType=BIGINT}
+  </update>
+
+<!--auto generated by MybatisCodeHelper on 2023-05-04-->
+  <select id="selectByMsgIdIn" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from msg_info
+    where msg_id in
+    <foreach close=")" collection="msgIdCollection" index="index" item="item" open="(" separator=",">
+      #{item,jdbcType=BIGINT}
+    </foreach>
+  </select>
+
+<!--auto generated by MybatisCodeHelper on 2023-05-04-->
+  <update id="updateStatusByMsgId">
+    update msg_info
+    set `status`=#{updatedStatus,jdbcType=TINYINT}
+    where msg_id=#{msgId,jdbcType=BIGINT}
+  </update>
+
+<!--auto generated by MybatisCodeHelper on 2023-05-04-->
+  <select id="selectByMsgIdInAndStatus" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from msg_info
+    where msg_id in
+    <foreach item="item" index="index" collection="msgIdCollection"
+             open="(" separator="," close=")">
+      #{item,jdbcType=BIGINT}
+    </foreach>
+    and `status`=#{status,jdbcType=TINYINT}
+  </select>
+
+<!--auto generated by MybatisCodeHelper on 2023-05-04-->
+  <select id="selectByStatus" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from msg_info
+    where `status`=#{status,jdbcType=TINYINT}
+  </select>
+
+<!--auto generated by MybatisCodeHelper on 2023-05-04-->
+  <update id="updateStatusByMsgIdAndStatus">
+    update msg_info
+    set `status`=#{updatedStatus,jdbcType=TINYINT}
+    where msg_id=#{msgId,jdbcType=BIGINT} and `status`=#{status,jdbcType=TINYINT}
+  </update>
+</mapper>

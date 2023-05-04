@@ -1,6 +1,7 @@
 package com.mall4j.cloud.common.order.bo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 
 import java.util.List;
 
@@ -9,30 +10,32 @@ import java.util.List;
  * @author FrozenWatermelon
  * @date 2020/12/8
  */
+@Data
 public class PayNotifyBO {
 
+    private Long msgId;
     private List<Long> orderIds;
-
-    public PayNotifyBO(){
-
-    }
-
-    public PayNotifyBO(List<Long> orderIds) {
-        this.orderIds = orderIds;
-    }
-
-    public List<Long> getOrderIds() {
-        return orderIds;
-    }
-
-    public void setOrderIds(List<Long> orderIds) {
-        this.orderIds = orderIds;
-    }
-
-    @Override
-    public String toString() {
-        return "PayNotifyBO{" +
-                "orderIds=" + orderIds +
-                '}';
-    }
+    //
+    // public PayNotifyBO(){
+    //
+    // }
+    //
+    // public PayNotifyBO(List<Long> orderIds) {
+    //     this.orderIds = orderIds;
+    // }
+    //
+    // public List<Long> getOrderIds() {
+    //     return orderIds;
+    // }
+    //
+    // public void setOrderIds(List<Long> orderIds) {
+    //     this.orderIds = orderIds;
+    // }
+    //
+    // @Override
+    // public String toString() {
+    //     return "PayNotifyBO{" +
+    //             "orderIds=" + orderIds +
+    //             '}';
+    // }
 }

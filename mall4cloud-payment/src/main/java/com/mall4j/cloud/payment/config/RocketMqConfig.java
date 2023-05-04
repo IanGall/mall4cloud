@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
+import static com.mall4j.cloud.common.rocketmq.config.RocketMqConstant.MQTemplateName.ORDER_NOTIFY_TEMPLATE;
+
 /**
  * @author FrozenWatermelon
  * @date 2021/3/30
@@ -21,7 +23,7 @@ public class RocketMqConfig {
     private RocketMqAdapter rocketMqAdapter;
 
     @Lazy
-    @Bean(destroyMethod = "destroy")
+    @Bean(destroyMethod = "destroy",value = ORDER_NOTIFY_TEMPLATE)
     public RocketMQTemplate orderNotifyTemplate() {
         return rocketMqAdapter.getTemplateByTopicName(RocketMqConstant.ORDER_NOTIFY_TOPIC);
     }

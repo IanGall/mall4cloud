@@ -1,6 +1,7 @@
 package com.mall4j.cloud.payment.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.mall4j.cloud.api.leaf.feign.SegmentFeignClient;
 import com.mall4j.cloud.api.order.feign.OrderFeignClient;
 import com.mall4j.cloud.api.order.vo.OrderAmountVO;
@@ -8,25 +9,29 @@ import com.mall4j.cloud.common.exception.Mall4cloudException;
 import com.mall4j.cloud.common.order.bo.PayNotifyBO;
 import com.mall4j.cloud.common.response.ResponseEnum;
 import com.mall4j.cloud.common.response.ServerResponseEntity;
-import com.mall4j.cloud.common.rocketmq.config.RocketMqConstant;
+import com.mall4j.cloud.common.rocketmq.mapper.MsgInfoMapper;
+import com.mall4j.cloud.common.rocketmq.model.MsgInfo;
 import com.mall4j.cloud.common.security.AuthUserContext;
 import com.mall4j.cloud.payment.bo.PayInfoBO;
 import com.mall4j.cloud.payment.bo.PayInfoResultBO;
 import com.mall4j.cloud.payment.constant.PayStatus;
 import com.mall4j.cloud.payment.dto.PayInfoDTO;
+import com.mall4j.cloud.common.rocketmq.event.AsyncMsgUtil;
+import com.mall4j.cloud.common.rocketmq.event.MsgEvent;
 import com.mall4j.cloud.payment.mapper.PayInfoMapper;
 import com.mall4j.cloud.payment.model.PayInfo;
 import com.mall4j.cloud.payment.service.PayInfoService;
-import org.apache.rocketmq.client.producer.SendStatus;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.support.GenericMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
+
+import static com.mall4j.cloud.common.rocketmq.config.RocketMqConstant.MQTemplateName.ORDER_NOTIFY_TEMPLATE;
+import static com.mall4j.cloud.common.rocketmq.config.RocketMqConstant.ORDER_NOTIFY_TOPIC;
 
 /**
  * 订单支付记录
@@ -36,6 +41,9 @@ import java.util.Objects;
  */
 @Service
 public class PayInfoServiceImpl implements PayInfoService {
+
+    @Autowired
+    private MsgInfoMapper msgInfoMapper;
 
     @Autowired
     private PayInfoMapper payInfoMapper;
@@ -100,12 +108,18 @@ public class PayInfoServiceImpl implements PayInfoService {
         payInfo.setCallbackTime(new Date());
         payInfo.setPayStatus(PayStatus.PAYED.value());
         payInfoMapper.update(payInfo);
-        // 发送消息，订单支付成功
-        SendStatus sendStatus = orderNotifyTemplate.syncSend(RocketMqConstant.ORDER_NOTIFY_TOPIC, new GenericMessage<>(new PayNotifyBO(orderIds))).getSendStatus();
-        if (!Objects.equals(sendStatus, SendStatus.SEND_OK)) {
-            // 消息发不出去就抛异常，因为订单回调会有多次，几乎不可能每次都无法发送出去，发的出去无所谓因为接口是幂等的
-            throw new Mall4cloudException(ResponseEnum.EXCEPTION);
-        }
+        // // 发送消息，订单支付成功
+        // SendStatus sendStatus = orderNotifyTemplate.syncSend(ORDER_NOTIFY_TOPIC, new GenericMessage<>(new PayNotifyBO(orderIds))).getSendStatus();
+        // if (!Objects.equals(sendStatus, SendStatus.SEND_OK)) {
+        //     // 消息发不出去就抛异常，因为订单回调会有多次，几乎不可能每次都无法发送出去，发的出去无所谓因为接口是幂等的
+        //     throw new Mall4cloudException(ResponseEnum.EXCEPTION);
+        // }
+        PayNotifyBO notifyBO = new PayNotifyBO();
+        notifyBO.setOrderIds(orderIds);
+        MsgInfo msgInfo = new MsgInfo(ORDER_NOTIFY_TEMPLATE,ORDER_NOTIFY_TOPIC, JSONUtil.toJsonStr(notifyBO));
+        // msgInfo.setTemplateName();
+        msgInfoMapper.insertSelective(msgInfo);
+        AsyncMsgUtil.pubMsgEvent(new MsgEvent(Arrays.asList(msgInfo.getMsgId())));
     }
 
     @Override
