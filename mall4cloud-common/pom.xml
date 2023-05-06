@@ -21,6 +21,7 @@
         <module>mall4cloud-common-security</module>
         <module>mall4cloud-common-order</module>
         <module>mall4cloud-common-rocketmq</module>
+        <module>mall4cloud-common-idempotent</module>
     </modules>
 
 </project>

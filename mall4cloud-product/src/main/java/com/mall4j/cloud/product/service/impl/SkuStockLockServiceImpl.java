@@ -11,7 +11,7 @@ import com.mall4j.cloud.common.database.vo.PageVO;
 import com.mall4j.cloud.common.exception.Mall4cloudException;
 import com.mall4j.cloud.common.response.ResponseEnum;
 import com.mall4j.cloud.common.response.ServerResponseEntity;
-import com.mall4j.cloud.common.rocketmq.config.RocketMqConstant;
+import com.mall4j.cloud.common.idempotent.config.RocketMqConstant;
 import com.mall4j.cloud.product.bo.SkuWithStockBO;
 import com.mall4j.cloud.product.mapper.SkuStockLockMapper;
 import com.mall4j.cloud.product.mapper.SkuStockMapper;

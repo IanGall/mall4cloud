@@ -18,7 +18,7 @@ import com.mall4j.cloud.common.order.vo.ShopCartOrderMergerVO;
 import com.mall4j.cloud.common.order.vo.ShopCartOrderVO;
 import com.mall4j.cloud.common.response.ResponseEnum;
 import com.mall4j.cloud.common.response.ServerResponseEntity;
-import com.mall4j.cloud.common.rocketmq.config.RocketMqConstant;
+import com.mall4j.cloud.common.idempotent.config.RocketMqConstant;
 import com.mall4j.cloud.common.security.AuthUserContext;
 import com.mall4j.cloud.order.bo.SubmitOrderPayAmountInfoBO;
 import com.mall4j.cloud.order.mapper.OrderMapper;

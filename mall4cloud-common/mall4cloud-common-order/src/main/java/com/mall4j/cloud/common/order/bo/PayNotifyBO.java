@@ -1,6 +1,5 @@
 package com.mall4j.cloud.common.order.bo;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.List;
@@ -13,7 +12,7 @@ import java.util.List;
 @Data
 public class PayNotifyBO {
 
-    private Long msgId;
+    private Long idempotentId;
     private List<Long> orderIds;
     //
     // public PayNotifyBO(){

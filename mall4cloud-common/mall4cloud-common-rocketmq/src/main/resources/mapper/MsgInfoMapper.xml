@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mall4j.cloud.common.rocketmq.mapper.MsgInfoMapper">
-  <resultMap id="BaseResultMap" type="com.mall4j.cloud.common.rocketmq.model.MsgInfo">
+<mapper namespace="com.mall4j.cloud.common.idempotent.mapper.MsgInfoMapper">
+  <resultMap id="BaseResultMap" type="com.mall4j.cloud.common.idempotent.model.MsgInfo">
     <!--@mbg.generated-->
     <!--@Table msg_info-->
     <id column="msg_id" jdbcType="BIGINT" property="msgId" />
@@ -32,7 +32,7 @@
     delete from msg_info
     where msg_id = #{msgId,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" keyColumn="msg_id" keyProperty="msgId" parameterType="com.mall4j.cloud.common.rocketmq.model.MsgInfo" useGeneratedKeys="true">
+  <insert id="insert" keyColumn="msg_id" keyProperty="msgId" parameterType="com.mall4j.cloud.common.idempotent.model.MsgInfo" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into msg_info (create_time, update_time, template_name,
       message_topic, message_body, timeout,
@@ -43,7 +43,7 @@
       #{delayLevel,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{errorMsg,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" keyColumn="msg_id" keyProperty="msgId" parameterType="com.mall4j.cloud.common.rocketmq.model.MsgInfo" useGeneratedKeys="true">
+  <insert id="insertSelective" keyColumn="msg_id" keyProperty="msgId" parameterType="com.mall4j.cloud.common.idempotent.model.MsgInfo" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into msg_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -105,7 +105,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.mall4j.cloud.common.rocketmq.model.MsgInfo">
+  <update id="updateByPrimaryKeySelective" parameterType="com.mall4j.cloud.common.idempotent.model.MsgInfo">
     <!--@mbg.generated-->
     update msg_info
     <set>
@@ -139,7 +139,7 @@
     </set>
     where msg_id = #{msgId,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.mall4j.cloud.common.rocketmq.model.MsgInfo">
+  <update id="updateByPrimaryKey" parameterType="com.mall4j.cloud.common.idempotent.model.MsgInfo">
     <!--@mbg.generated-->
     update msg_info
     set create_time = #{createTime,jdbcType=TIMESTAMP},

@@ -1,7 +1,7 @@
 package com.mall4j.cloud.order.config;
 
-import com.mall4j.cloud.common.rocketmq.config.RocketMqAdapter;
-import com.mall4j.cloud.common.rocketmq.config.RocketMqConstant;
+import com.mall4j.cloud.common.idempotent.config.RocketMqAdapter;
+import com.mall4j.cloud.common.idempotent.config.RocketMqConstant;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
-import static com.mall4j.cloud.common.rocketmq.config.RocketMqConstant.MQTemplateName.*;
+import static com.mall4j.cloud.common.idempotent.config.RocketMqConstant.MQTemplateName.*;
 
 /**
  * @author FrozenWatermelon

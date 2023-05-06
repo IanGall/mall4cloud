@@ -1,7 +1,7 @@
 package com.mall4j.cloud.product.config;
 
-import com.mall4j.cloud.common.rocketmq.config.RocketMqAdapter;
-import com.mall4j.cloud.common.rocketmq.config.RocketMqConstant;
+import com.mall4j.cloud.common.idempotent.config.RocketMqAdapter;
+import com.mall4j.cloud.common.idempotent.config.RocketMqConstant;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;

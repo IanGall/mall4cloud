@@ -6,18 +6,20 @@ import com.mall4j.cloud.api.leaf.feign.SegmentFeignClient;
 import com.mall4j.cloud.api.order.feign.OrderFeignClient;
 import com.mall4j.cloud.api.order.vo.OrderAmountVO;
 import com.mall4j.cloud.common.exception.Mall4cloudException;
+import com.mall4j.cloud.common.idempotent.mapper.IdempotentInfoMapper;
+import com.mall4j.cloud.common.idempotent.model.IdempotentInfo;
 import com.mall4j.cloud.common.order.bo.PayNotifyBO;
 import com.mall4j.cloud.common.response.ResponseEnum;
 import com.mall4j.cloud.common.response.ServerResponseEntity;
-import com.mall4j.cloud.common.rocketmq.mapper.MsgInfoMapper;
-import com.mall4j.cloud.common.rocketmq.model.MsgInfo;
+import com.mall4j.cloud.common.idempotent.mapper.MsgInfoMapper;
+import com.mall4j.cloud.common.idempotent.model.MsgInfo;
 import com.mall4j.cloud.common.security.AuthUserContext;
 import com.mall4j.cloud.payment.bo.PayInfoBO;
 import com.mall4j.cloud.payment.bo.PayInfoResultBO;
 import com.mall4j.cloud.payment.constant.PayStatus;
 import com.mall4j.cloud.payment.dto.PayInfoDTO;
-import com.mall4j.cloud.common.rocketmq.event.AsyncMsgUtil;
-import com.mall4j.cloud.common.rocketmq.event.MsgEvent;
+import com.mall4j.cloud.common.idempotent.event.AsyncMsgUtil;
+import com.mall4j.cloud.common.idempotent.event.MsgEvent;
 import com.mall4j.cloud.payment.mapper.PayInfoMapper;
 import com.mall4j.cloud.payment.model.PayInfo;
 import com.mall4j.cloud.payment.service.PayInfoService;
@@ -30,8 +32,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import static com.mall4j.cloud.common.rocketmq.config.RocketMqConstant.MQTemplateName.ORDER_NOTIFY_TEMPLATE;
-import static com.mall4j.cloud.common.rocketmq.config.RocketMqConstant.ORDER_NOTIFY_TOPIC;
+import static com.mall4j.cloud.common.idempotent.config.RocketMqConstant.MQTemplateName.ORDER_NOTIFY_TEMPLATE;
+import static com.mall4j.cloud.common.idempotent.config.RocketMqConstant.ORDER_NOTIFY_TOPIC;
 
 /**
  * 订单支付记录
@@ -44,6 +46,9 @@ public class PayInfoServiceImpl implements PayInfoService {
 
     @Autowired
     private MsgInfoMapper msgInfoMapper;
+
+    @Autowired
+    private IdempotentInfoMapper idempotentInfoMapper;
 
     @Autowired
     private PayInfoMapper payInfoMapper;
@@ -114,9 +119,17 @@ public class PayInfoServiceImpl implements PayInfoService {
         //     // 消息发不出去就抛异常，因为订单回调会有多次，几乎不可能每次都无法发送出去，发的出去无所谓因为接口是幂等的
         //     throw new Mall4cloudException(ResponseEnum.EXCEPTION);
         // }
+
+        //幂等记录
+        IdempotentInfo idempotentInfo = new IdempotentInfo();
+        idempotentInfo.setStatus((byte) 0);
+        idempotentInfoMapper.insertSelective(idempotentInfo);
+
+        // 本地消息表记录
         PayNotifyBO notifyBO = new PayNotifyBO();
+        notifyBO.setIdempotentId(idempotentInfo.getId());
         notifyBO.setOrderIds(orderIds);
-        MsgInfo msgInfo = new MsgInfo(ORDER_NOTIFY_TEMPLATE,ORDER_NOTIFY_TOPIC, JSONUtil.toJsonStr(notifyBO));
+        MsgInfo msgInfo = new MsgInfo(ORDER_NOTIFY_TEMPLATE, ORDER_NOTIFY_TOPIC, JSONUtil.toJsonStr(notifyBO));
         // msgInfo.setTemplateName();
         msgInfoMapper.insertSelective(msgInfo);
         AsyncMsgUtil.pubMsgEvent(new MsgEvent(Arrays.asList(msgInfo.getMsgId())));

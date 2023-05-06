@@ -1,6 +1,6 @@
 package com.mall4j.cloud.order.listener;
 
-import com.mall4j.cloud.common.rocketmq.config.RocketMqConstant;
+import com.mall4j.cloud.common.idempotent.config.RocketMqConstant;
 import com.mall4j.cloud.order.service.OrderService;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
