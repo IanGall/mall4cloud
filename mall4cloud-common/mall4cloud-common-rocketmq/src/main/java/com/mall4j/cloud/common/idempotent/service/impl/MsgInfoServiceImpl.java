@@ -1,15 +1,20 @@
 package com.mall4j.cloud.common.idempotent.service.impl;
 
+import cn.hutool.json.JSONUtil;
 import com.mall4j.cloud.common.idempotent.constant.MsgStatusCst;
 import com.mall4j.cloud.common.idempotent.mapper.MsgInfoMapper;
+import com.mall4j.cloud.common.idempotent.message.PayNotifyBO;
 import com.mall4j.cloud.common.idempotent.model.MsgInfo;
 import com.mall4j.cloud.common.idempotent.service.MsgInfoService;
 import com.mall4j.cloud.common.util.SpringContextUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.producer.SendStatus;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
 
 import javax.annotation.Resource;
 import java.util.Collection;
@@ -81,24 +86,38 @@ public class MsgInfoServiceImpl implements MsgInfoService {
     public void batchAsyncSend(List<MsgInfo> msgInfos) {
         for (MsgInfo msgInfo : msgInfos) {
             Long msgId = msgInfo.getMsgId();
-            RocketMQTemplate mqTemplate = SpringContextUtils.getBean(msgInfo.getTemplateName(), RocketMQTemplate.class);
-            // SendStatus sendStatus = mqTemplate.syncSend(msgInfo.getMessageTopic(), new GenericMessage<>(msgInfo.getMessageBody())
-            //         , msgInfo.getTimeout(), msgInfo.getDelayLevel()).getSendStatus();
-            CompletableFuture.supplyAsync(() -> mqTemplate.syncSend(msgInfo.getMessageTopic(), new GenericMessage<>(msgInfo.getMessageBody())
-                            , msgInfo.getTimeout(), msgInfo.getDelayLevel()).getSendStatus(), asyncSendService)
-                    .thenAccept(sendStatus -> {
-                        log.info("msgId: {}, sendStatus: {}", msgId, sendStatus);
-                        if (SendStatus.SEND_OK.equals(sendStatus)) {
-                            // 成功修改状态
-                            msgInfoMapper.updateStatusByMsgIdAndStatus(MsgStatusCst.SENDED, msgId, MsgStatusCst.NOT_SENDED);
-                        }
-                    });
+            // RocketMQTemplate mqTemplate = SpringContextUtils.getBean(msgInfo.getTemplateName(), RocketMQTemplate.class);
+            KafkaTemplate mqTemplate = SpringContextUtils.getBean(KafkaTemplate.class);
+            Class<?> beanClass = null;
+            try {
+                beanClass = Class.forName(msgInfo.getClassName());
+            } catch (ClassNotFoundException e) {
+                log.error("获取类出错: {}",e.getMessage());
+                return;
+            }
+            ListenableFuture<SendResult<String, Object>> future = mqTemplate.send(msgInfo.getMessageTopic(), JSONUtil.toBean(msgInfo.getMessageBody(), beanClass));
+            future.addCallback(result ->
+                    {
+                        log.info("生产者成功发送消息到topic:{} partition:{}的消息", result.getRecordMetadata().topic(), result.getRecordMetadata().partition());
+                        msgInfoMapper.updateStatusByMsgIdAndStatus(MsgStatusCst.SENDED, msgId, MsgStatusCst.NOT_SENDED);
+                    },
+                    ex -> log.error("生产者发送消失败，原因：{}", ex.getMessage()));
 
-            // log.info("msgId: {}, sendStatus: {}", msgId,sendStatus);
-            // if (SendStatus.SEND_OK.equals(sendStatus)) {
-            //     // 成功修改状态
-            //     msgInfoMapper.updateStatusByMsgIdAndStatus(MsgStatusCst.SENDED, msgId,MsgStatusCst.NOT_SENDED);
-            // }
+            // CompletableFuture.supplyAsync(() -> {
+            //                     try {
+            //                         return mqTemplate.send(msgInfo.getMessageTopic(), msgInfo.getMessageBody()).get();
+            //                     } catch (InterruptedException | ExecutionException e) {
+            //                         throw new RuntimeException(e);
+            //                     }
+            //                 }
+            //                 , asyncSendService)
+            //         .thenAccept(sendStatus -> {
+            //             log.info("msgId: {}, sendStatus: {}", msgId, sendStatus);
+            //             if (SendStatus.SEND_OK.equals(sendStatus)) {
+            //                 // 成功修改状态
+            //                 msgInfoMapper.updateStatusByMsgIdAndStatus(MsgStatusCst.SENDED, msgId, MsgStatusCst.NOT_SENDED);
+            //             }
+            //         });
         }
     }
 

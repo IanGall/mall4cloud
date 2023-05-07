@@ -4,9 +4,9 @@ import com.mall4j.cloud.api.leaf.feign.PaymentIdempotentFeignClient;
 import com.mall4j.cloud.common.exception.Mall4cloudException;
 import com.mall4j.cloud.common.idempotent.model.IdempotentInfo;
 import com.mall4j.cloud.common.idempotent.service.IdempotentInfoService;
-import com.mall4j.cloud.common.order.bo.PayNotifyBO;
+import com.mall4j.cloud.common.idempotent.message.PayNotifyBO;
 import com.mall4j.cloud.common.response.ResponseEnum;
-import com.mall4j.cloud.common.idempotent.config.RocketMqConstant;
+import com.mall4j.cloud.common.idempotent.constant.MqConstant;
 import com.mall4j.cloud.common.util.Json;
 import com.mall4j.cloud.order.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +14,6 @@ import org.apache.rocketmq.client.producer.SendStatus;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.stereotype.Component;
@@ -31,7 +29,7 @@ import static com.mall4j.cloud.common.idempotent.constant.IdempotentCst.NOT_HAND
  * @date 2021/1/7
  */
 @Component
-@RocketMQMessageListener(topic = RocketMqConstant.ORDER_NOTIFY_TOPIC, consumerGroup = RocketMqConstant.ORDER_NOTIFY_TOPIC)
+@RocketMQMessageListener(topic = MqConstant.ORDER_NOTIFY_TOPIC, consumerGroup = MqConstant.ORDER_NOTIFY_TOPIC)
 @Slf4j
 public class OrderNotifyConsumer implements RocketMQListener<PayNotifyBO> {
 
@@ -68,7 +66,7 @@ public class OrderNotifyConsumer implements RocketMQListener<PayNotifyBO> {
         log.info("订单回调开始... message: " + Json.toJsonString(message));
         orderService.updateByToPaySuccess(message.getOrderIds());
         // 发送消息，订单支付成功 通知库存扣减
-        SendStatus sendStockStatus = orderNotifyStockTemplate.syncSend(RocketMqConstant.ORDER_NOTIFY_STOCK_TOPIC, new GenericMessage<>(message)).getSendStatus();
+        SendStatus sendStockStatus = orderNotifyStockTemplate.syncSend(MqConstant.ORDER_NOTIFY_STOCK_TOPIC, new GenericMessage<>(message)).getSendStatus();
         if (!Objects.equals(sendStockStatus, SendStatus.SEND_OK)) {
             throw new Mall4cloudException(ResponseEnum.EXCEPTION);
         }

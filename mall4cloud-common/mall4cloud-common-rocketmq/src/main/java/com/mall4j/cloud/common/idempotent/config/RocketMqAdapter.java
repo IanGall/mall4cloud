@@ -1,5 +1,6 @@
 package com.mall4j.cloud.common.idempotent.config;
 
+import com.mall4j.cloud.common.idempotent.constant.MqConstant;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.apache.rocketmq.spring.support.RocketMQMessageConverter;
@@ -28,7 +29,7 @@ public class RocketMqAdapter {
         // TransactionMQProducer p = new TransactionMQProducer();
         producer.setNamesrvAddr(nameServer);
         producer.setRetryTimesWhenSendFailed(2);
-        producer.setSendMsgTimeout((int) RocketMqConstant.TIMEOUT);
+        producer.setSendMsgTimeout((int) MqConstant.TIMEOUT);
         mqTemplate.setProducer(producer);
         mqTemplate.setMessageConverter(rocketMqMessageConverter.getMessageConverter());
         return mqTemplate;

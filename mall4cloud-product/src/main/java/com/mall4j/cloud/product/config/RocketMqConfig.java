@@ -1,7 +1,7 @@
 package com.mall4j.cloud.product.config;
 
 import com.mall4j.cloud.common.idempotent.config.RocketMqAdapter;
-import com.mall4j.cloud.common.idempotent.config.RocketMqConstant;
+import com.mall4j.cloud.common.idempotent.constant.MqConstant;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -23,7 +23,7 @@ public class RocketMqConfig {
     @Lazy
     @Bean(destroyMethod = "destroy")
     public RocketMQTemplate stockMqTemplate() {
-        return rocketMqAdapter.getTemplateByTopicName(RocketMqConstant.STOCK_UNLOCK_TOPIC);
+        return rocketMqAdapter.getTemplateByTopicName(MqConstant.STOCK_UNLOCK_TOPIC);
     }
 
 }

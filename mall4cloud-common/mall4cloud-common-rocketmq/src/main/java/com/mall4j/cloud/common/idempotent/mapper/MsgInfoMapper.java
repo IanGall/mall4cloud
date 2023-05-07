@@ -23,13 +23,11 @@ public interface MsgInfoMapper {
 
     List<MsgInfo> selectByMsgIdIn(@Param("msgIdCollection") Collection<Long> msgIdCollection);
 
-    int updateStatusByMsgId(@Param("updatedStatus")Byte updatedStatus,@Param("msgId")Long msgId);
+    int updateStatusByMsgId(@Param("updatedStatus") Byte updatedStatus, @Param("msgId") Long msgId);
 
-    int updateStatusByMsgIdAndStatus(@Param("updatedStatus")Byte updatedStatus,@Param("msgId")Long msgId,@Param("status")Byte status);
+    int updateStatusByMsgIdAndStatus(@Param("updatedStatus") Byte updatedStatus, @Param("msgId") Long msgId, @Param("status") Byte status);
 
-    List<MsgInfo> selectByMsgIdInAndStatus(@Param("msgIdCollection")Collection<Long> msgIdCollection,@Param("status")Byte status);
+    List<MsgInfo> selectByMsgIdInAndStatus(@Param("msgIdCollection") Collection<Long> msgIdCollection, @Param("status") Byte status);
 
-    List<MsgInfo> selectByStatus(@Param("status")Byte status);
-
-
+    List<MsgInfo> selectByStatus(@Param("status") Byte status);
 }

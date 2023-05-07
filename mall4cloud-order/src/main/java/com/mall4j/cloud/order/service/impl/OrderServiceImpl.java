@@ -18,7 +18,7 @@ import com.mall4j.cloud.common.order.vo.ShopCartOrderMergerVO;
 import com.mall4j.cloud.common.order.vo.ShopCartOrderVO;
 import com.mall4j.cloud.common.response.ResponseEnum;
 import com.mall4j.cloud.common.response.ServerResponseEntity;
-import com.mall4j.cloud.common.idempotent.config.RocketMqConstant;
+import com.mall4j.cloud.common.idempotent.constant.MqConstant;
 import com.mall4j.cloud.common.security.AuthUserContext;
 import com.mall4j.cloud.order.bo.SubmitOrderPayAmountInfoBO;
 import com.mall4j.cloud.order.mapper.OrderMapper;
@@ -107,7 +107,7 @@ public class OrderServiceImpl implements OrderService {
             throw new Mall4cloudException(lockStockResponse.getMsg());
         }
         // 发送消息，如果三十分钟后没有支付，则取消订单
-        SendStatus sendStatus = orderCancelTemplate.syncSend(RocketMqConstant.ORDER_CANCEL_TOPIC, new GenericMessage<>(orderIds), RocketMqConstant.TIMEOUT, RocketMqConstant.CANCEL_ORDER_DELAY_LEVEL).getSendStatus();
+        SendStatus sendStatus = orderCancelTemplate.syncSend(MqConstant.ORDER_CANCEL_TOPIC, new GenericMessage<>(orderIds), MqConstant.TIMEOUT, MqConstant.CANCEL_ORDER_DELAY_LEVEL).getSendStatus();
         if (!Objects.equals(sendStatus,SendStatus.SEND_OK)) {
             // 消息发不出去就抛异常，发的出去无所谓
             throw new Mall4cloudException(ResponseEnum.EXCEPTION);
@@ -168,7 +168,7 @@ public class OrderServiceImpl implements OrderService {
         }
         orderMapper.cancelOrders(cancelOrderIds);
         // 解锁库存状态
-        SendStatus stockSendStatus = stockMqTemplate.syncSend(RocketMqConstant.STOCK_UNLOCK_TOPIC, new GenericMessage<>(orderIds)).getSendStatus();
+        SendStatus stockSendStatus = stockMqTemplate.syncSend(MqConstant.STOCK_UNLOCK_TOPIC, new GenericMessage<>(orderIds)).getSendStatus();
         if (!Objects.equals(stockSendStatus,SendStatus.SEND_OK)) {
             // 消息发不出去就抛异常，发的出去无所谓
             throw new Mall4cloudException(ResponseEnum.EXCEPTION);

@@ -1,6 +1,6 @@
 package com.mall4j.cloud.product.listener;
 
-import com.mall4j.cloud.common.idempotent.config.RocketMqConstant;
+import com.mall4j.cloud.common.idempotent.constant.MqConstant;
 import com.mall4j.cloud.product.service.SkuStockLockService;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
@@ -14,7 +14,7 @@ import java.util.List;
  * @author FrozenWatermelon
  */
 @Component
-@RocketMQMessageListener(topic = RocketMqConstant.STOCK_UNLOCK_TOPIC,consumerGroup = RocketMqConstant.STOCK_UNLOCK_TOPIC)
+@RocketMQMessageListener(topic = MqConstant.STOCK_UNLOCK_TOPIC,consumerGroup = MqConstant.STOCK_UNLOCK_TOPIC)
 public class StockUnlockConsumer implements RocketMQListener<List<Long>> {
 
     @Autowired

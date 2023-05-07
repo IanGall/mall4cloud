@@ -1,6 +1,6 @@
 package com.mall4j.cloud.order.listener;
 
-import com.mall4j.cloud.common.idempotent.config.RocketMqConstant;
+import com.mall4j.cloud.common.idempotent.constant.MqConstant;
 import com.mall4j.cloud.order.service.OrderService;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
@@ -13,7 +13,7 @@ import java.util.List;
  * @author FrozenWatermelon
  */
 @Component
-@RocketMQMessageListener(topic = RocketMqConstant.ORDER_CANCEL_TOPIC,consumerGroup = RocketMqConstant.ORDER_CANCEL_TOPIC)
+@RocketMQMessageListener(topic = MqConstant.ORDER_CANCEL_TOPIC,consumerGroup = MqConstant.ORDER_CANCEL_TOPIC)
 public class OrderCancelConsumer implements RocketMQListener<List<Long>> {
 
     @Autowired

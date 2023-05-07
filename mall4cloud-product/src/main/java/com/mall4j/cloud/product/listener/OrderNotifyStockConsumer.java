@@ -1,7 +1,7 @@
 package com.mall4j.cloud.product.listener;
 
-import com.mall4j.cloud.common.order.bo.PayNotifyBO;
-import com.mall4j.cloud.common.idempotent.config.RocketMqConstant;
+import com.mall4j.cloud.common.idempotent.message.PayNotifyBO;
+import com.mall4j.cloud.common.idempotent.constant.MqConstant;
 import com.mall4j.cloud.product.service.SkuStockLockService;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * @author FrozenWatermelon
  */
 @Component
-@RocketMQMessageListener(topic = RocketMqConstant.ORDER_NOTIFY_STOCK_TOPIC,consumerGroup = RocketMqConstant.ORDER_NOTIFY_STOCK_TOPIC)
+@RocketMQMessageListener(topic = MqConstant.ORDER_NOTIFY_STOCK_TOPIC,consumerGroup = MqConstant.ORDER_NOTIFY_STOCK_TOPIC)
 public class OrderNotifyStockConsumer implements RocketMQListener<PayNotifyBO> {
 
     @Autowired

@@ -8,7 +8,7 @@ import com.mall4j.cloud.api.order.vo.OrderAmountVO;
 import com.mall4j.cloud.common.exception.Mall4cloudException;
 import com.mall4j.cloud.common.idempotent.mapper.IdempotentInfoMapper;
 import com.mall4j.cloud.common.idempotent.model.IdempotentInfo;
-import com.mall4j.cloud.common.order.bo.PayNotifyBO;
+import com.mall4j.cloud.common.idempotent.message.PayNotifyBO;
 import com.mall4j.cloud.common.response.ResponseEnum;
 import com.mall4j.cloud.common.response.ServerResponseEntity;
 import com.mall4j.cloud.common.idempotent.mapper.MsgInfoMapper;
@@ -32,8 +32,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import static com.mall4j.cloud.common.idempotent.config.RocketMqConstant.MQTemplateName.ORDER_NOTIFY_TEMPLATE;
-import static com.mall4j.cloud.common.idempotent.config.RocketMqConstant.ORDER_NOTIFY_TOPIC;
+import static com.mall4j.cloud.common.idempotent.constant.MqConstant.MQTemplateName.ORDER_NOTIFY_TEMPLATE;
+import static com.mall4j.cloud.common.idempotent.constant.MqConstant.ORDER_NOTIFY_TOPIC;
 
 /**
  * 订单支付记录
@@ -121,15 +121,19 @@ public class PayInfoServiceImpl implements PayInfoService {
         // }
 
         //幂等记录
+        ServerResponseEntity<Long> response = segmentFeignClient.getSegmentId("mall4cloud-idempotent");
+
         IdempotentInfo idempotentInfo = new IdempotentInfo();
+        Long id = response.getData();
+        idempotentInfo.setId(id);
         idempotentInfo.setStatus((byte) 0);
         idempotentInfoMapper.insertSelective(idempotentInfo);
 
         // 本地消息表记录
         PayNotifyBO notifyBO = new PayNotifyBO();
-        notifyBO.setIdempotentId(idempotentInfo.getId());
+        notifyBO.setIdempotentId(id);
         notifyBO.setOrderIds(orderIds);
-        MsgInfo msgInfo = new MsgInfo(ORDER_NOTIFY_TEMPLATE, ORDER_NOTIFY_TOPIC, JSONUtil.toJsonStr(notifyBO));
+        MsgInfo msgInfo = new MsgInfo(ORDER_NOTIFY_TEMPLATE, ORDER_NOTIFY_TOPIC, JSONUtil.toJsonStr(notifyBO),notifyBO.getClass().getName());
         // msgInfo.setTemplateName();
         msgInfoMapper.insertSelective(msgInfo);
         AsyncMsgUtil.pubMsgEvent(new MsgEvent(Arrays.asList(msgInfo.getMsgId())));

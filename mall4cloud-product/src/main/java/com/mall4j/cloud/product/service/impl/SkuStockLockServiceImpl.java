@@ -11,7 +11,7 @@ import com.mall4j.cloud.common.database.vo.PageVO;
 import com.mall4j.cloud.common.exception.Mall4cloudException;
 import com.mall4j.cloud.common.response.ResponseEnum;
 import com.mall4j.cloud.common.response.ServerResponseEntity;
-import com.mall4j.cloud.common.idempotent.config.RocketMqConstant;
+import com.mall4j.cloud.common.idempotent.constant.MqConstant;
 import com.mall4j.cloud.product.bo.SkuWithStockBO;
 import com.mall4j.cloud.product.mapper.SkuStockLockMapper;
 import com.mall4j.cloud.product.mapper.SkuStockMapper;
@@ -108,7 +108,7 @@ public class SkuStockLockServiceImpl implements SkuStockLockService {
         skuStockLockMapper.saveBatch(skuStockLocks);
         List<Long> orderIds = skuStockLocksParam.stream().map(SkuStockLockDTO::getOrderId).collect(Collectors.toList());
         // 一个小时后解锁库存
-        SendStatus sendStatus = stockMqTemplate.syncSend(RocketMqConstant.STOCK_UNLOCK_TOPIC, new GenericMessage<>(orderIds), RocketMqConstant.TIMEOUT, RocketMqConstant.CANCEL_ORDER_DELAY_LEVEL + 1).getSendStatus();
+        SendStatus sendStatus = stockMqTemplate.syncSend(MqConstant.STOCK_UNLOCK_TOPIC, new GenericMessage<>(orderIds), MqConstant.TIMEOUT, MqConstant.CANCEL_ORDER_DELAY_LEVEL + 1).getSendStatus();
         if (!Objects.equals(sendStatus,SendStatus.SEND_OK)) {
             // 消息发不出去就抛异常，发的出去无所谓
             throw new Mall4cloudException(ResponseEnum.EXCEPTION);

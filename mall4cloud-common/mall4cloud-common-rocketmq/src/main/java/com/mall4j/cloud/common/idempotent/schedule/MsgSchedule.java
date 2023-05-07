@@ -21,7 +21,7 @@ public class MsgSchedule {
 
     private final MsgInfoService msgInfoService;
 
-    @Scheduled(cron = "0/2 * * * * ?")
+    @Scheduled(cron = "0/10 * * * * ?")
     public void scheduleScanLocalMessage(){
         log.info("扫描消息表开始...."+System.currentTimeMillis());
 

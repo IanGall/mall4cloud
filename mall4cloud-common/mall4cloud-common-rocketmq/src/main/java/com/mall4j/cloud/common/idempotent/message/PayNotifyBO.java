@@ -1,4 +1,4 @@
-package com.mall4j.cloud.common.order.bo;
+package com.mall4j.cloud.common.idempotent.message;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.mall4j.cloud.common.idempotent.config;
+package com.mall4j.cloud.common.idempotent.constant;
 
 /**
  * nameserver用;分割
@@ -7,7 +7,7 @@ package com.mall4j.cloud.common.idempotent.config;
  * @author FrozenWatermelon
  * @date 2021/3/25
  */
-public class RocketMqConstant {
+public class MqConstant {
 
     // 延迟消息 1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h (1-18)
 
@@ -55,6 +55,14 @@ public class RocketMqConstant {
         public static final String ORDER_CANCEL_TEMPLATE = "orderCancelTemplate";
         public static final String ORDER_NOTIFY_STOCK_TEMPLATE = "orderNotifyStockTemplate";
         public static final String ORDER_NOTIFY_TEMPLATE = "orderNotifyTemplate";
+
+    }
+
+    /**
+     * MQConsumerName
+     */
+    public static class MQConsumerName {
+        public static final String ORDER_CONSUMER = "ORDER_CONSUMER";
 
     }
 

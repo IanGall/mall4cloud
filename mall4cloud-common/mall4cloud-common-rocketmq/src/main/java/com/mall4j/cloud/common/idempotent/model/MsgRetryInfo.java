@@ -7,23 +7,23 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * 本地消息表
+ * 消息重试表
  */
 @Data
-@NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class MsgInfo extends BaseModel {
-    public MsgInfo(String templateName, String messageTopic, String messageBody) {
-        this.templateName = templateName;
-        this.messageTopic = messageTopic;
-        this.messageBody = messageBody;
-    }
-
-    public MsgInfo(String templateName, String messageTopic, String messageBody, String className) {
-        this.templateName = templateName;
-        this.messageTopic = messageTopic;
+@NoArgsConstructor
+public class MsgRetryInfo extends BaseModel {
+    public MsgRetryInfo(String messageBody, String className, String bizHandlerName) {
         this.messageBody = messageBody;
         this.className = className;
+        this.bizHandlerName = bizHandlerName;
+    }
+
+    public MsgRetryInfo(Long msgId, String messageBody, String className, String bizHandlerName) {
+        this.msgId = msgId;
+        this.messageBody = messageBody;
+        this.className = className;
+        this.bizHandlerName = bizHandlerName;
     }
 
     /**
@@ -52,6 +52,21 @@ public class MsgInfo extends BaseModel {
     private String className;
 
     /**
+     * 业务处理对象名
+     */
+    private String bizHandlerName;
+
+    /**
+     * 消费次数
+     */
+    private Byte currTime;
+
+    /**
+     * 最大消费次数
+     */
+    private Byte maxTime;
+
+    /**
      * 消息超时时间
      */
     private Integer timeout;
@@ -62,13 +77,12 @@ public class MsgInfo extends BaseModel {
     private Byte delayLevel;
 
     /**
-     * 消息状态，0-未发送，1-已发送
+     * 消息状态，0-未处理，1-已处理
      */
     private Byte status;
 
     /**
-     * 失败原因
+     * 处理失败原因
      */
     private String errorMsg;
-
 }
